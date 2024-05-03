@@ -1,0 +1,21 @@
+**2024 VERSION OF REACT JS SETUP ON VS CODE**
+
+1. Go to nodejs.org
+2. Download 20.8.0 Current
+3. Install it
+4. Go to VS Code
+5. Create or open a project folder
+6. Create a new terminal
+7. Type in: 	npm create vite@latest
+
+	7.1 If it encounters a security error, go to you pc's powershell  and type in: Set-ExecutionPolicy RemoteSigned
+	7.2 Run the npm create vite@latest command again.
+	7.3 If it says in needs the latest version to be installed, just press enter to agree.
+
+8. Type in: 	your-react-project-name
+9. Select a framework with your arrow keys (Select React)
+10. Select a variant (Select Javascript)
+11. Change the directory, type in: cd your-react-project-name
+12. Type in: npm install
+13. Type in: npm run dev
+14. Copy the localhost link and paste it on your web browser
