@@ -1,7 +1,7 @@
 **2024 VERSION OF REACT JS SETUP ON VS CODE**
 
 1. Go to nodejs.org
-2. Download 20.8.0 Current
+2. Download x.x.x Current (the most latest "Current" version)
 3. Install it
 4. Go to VS Code
 5. Create or open a project folder
