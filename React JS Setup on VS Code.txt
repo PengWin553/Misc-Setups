@@ -1,4 +1,4 @@
-*SETUP REACT ON VISUAL STUDIO CODE**
+*SETUP REACT ON VISUAL STUDIO CODE (Outdated Version)**
 
 1. Go to nodejs.org
 2. Click the download button "Download Node.js(LTS)
@@ -9,7 +9,7 @@
 	That checks the version of the node.js
 5. Go to LocalDisk C > Program Files > nodejs, then copy the complete path
 6. Go to This PC. Right-click and click Properties
-7. Click Evironment Variables
+7. Click Environment Variables
 8. Select "Path" then click the Edit Button.
 9. Node.js should be listed in the Edit Environment Variables.
 	9.1 If it isn't included,
@@ -19,7 +19,7 @@
 (<---STEPS TO MAKE SURE--->)
 
 10. Restart Visual Studio if it's already running.
-11. Create a newTerminal and type: npm install -g npx
+11. Create a new terminal and type: npm install -g npx
 12. To create your project, type:  npx create-react-app project_name
 
 To run your React JS Project in your browser:
