@@ -1,0 +1,318 @@
+**COMPLETE C# ASP.NET Entity Framework Core Setup + Simple CRUD***
+
+PREREQUISITES
+	You must already had installed the following: 
+	* 	C# Dev Kit - Microsoft
+	*  C# Extentions - JosKreativ
+    *  NuGet Gallery - pcislo  
+    
+    * (an SDK. Preferably 7.0.0 version)
+    
+    * VS Code
+    * ASP.NET Framework
+
+1. Open your Microsoft SQL Server Management Studio
+2. Create a database:
+   Ex:
+         CREATE DATABASE Library;
+      
+3. Create a table:
+	Ex: 
+	      CREATE TABLE Book (
+				Id int primary key identity(1,1),
+				Name varchar(50) not null,
+				Author varchar(50) not null
+			);
+			
+4. Insert data into table
+   Ex: 
+		 INSERT INTO Book (name, author)
+		 VALUES
+		 ('Bloom Into You','Nio Nakatani'),
+		 ('Im in love with the Villainess','Nio Nakatani'),
+		 ('Girls Kingdom','Nayo')
+		
+5. Create a folder in your file explorer folder
+   EX: Creating the folder named ‘SetupMVC’ in your Documents folder
+
+6. Open visual studio and open up that folder
+
+7. Create a new terminal and type:
+                                                 dotnet new mvc
+                                                 
+           
+8. Download dotnet ef by typing this in the terminal:
+                                                 dotnet tool install --global dotnet-ef
+                                                 
+NOTE: After this, we can now proceed with installing the packages  ---------------------------------------------------------------------------------------------------
+
+9. In your project workspace or folder, press CTRL+ SHIFT P
+10. In the textbox, type in:
+                                     NuGet
+11. Click on the result that is ‘Open NuGet Gallery’. This should take you to something that allows you to select and install something that looks like extensions.
+12. On the search box, type in:
+                                            Microsoft.EntityFrameworkCore
+13. Before downloading, make sure that you know the version of the SDK you're using. Type in the terminal:
+																																					 dotnet --list-sdks
+	 This should give you a result that's something like:
+	 Example 1:
+					 7.0.313 [C:\Program Files\dotnet\sdk]
+     Example 2 (if you have multiple SDKs installed):
+			         5.0.416 [C:\Program Files\dotnet\sdk]
+					 7.0.313 [C:\Program Files\dotnet\sdk]
+					 8.0.201 [C:\Program Files\dotnet\sdk]
+
+14. Click on Microsoft.EntityFrameworkCore by Microsoft
+15. Select this version in the dropdown menu:
+                                                                7.0.0 
+16. Click the Install link             (to confirm that it's downloaded, the Install link will turn to Uninstall)
+17. Click on Microsoft.EntityFrameworkCore.SqlServer by Microsoft
+18. Select this version in the dropdown menu:
+                                                                7.0.0 
+19. Click the Install link             (to confirm that it's downloaded, the Install link will turn to Uninstall)
+20. Click on Microsoft.EntityFrameworkCore.Tools by Microsoft
+21. Select this version in the dropdown menu:
+                                                                7.0.0 
+22. Click the Install link             (to confirm that it's downloaded, the Install link will turn to Uninstall)
+
+23. To see that you downloaded the right versions, just go to your .csproj file. The following should appear:
+ 																																					Microsoft.EntityFrameworkCore (version 7.0.0)
+																																					Microsoft.EntityFrameworkCore.SqlServer (version 7.0.0)
+																																					Microsoft.EntityFrameworkCore.Tools (version 7.0.0)
+
+
+NOTE: After this, we can now make a scaffold ------------------------------------------------------------------------------------------
+
+24. Go to your terminal and type either of this: 
+      1) If your server is not SQL Express:
+      					"Server=localhost;Database=Library;TrustServerCertificate=true;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -o Entities -f
+      
+      2) If your server is SQL Express:
+      					dotnet ef dbcontext scaffold "Server=LAPTOP-99DHVJFT\SQLEXPRESS;Database=Library;TrustServerCertificate=true;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -o Entities -f
+      
+      
+NOTE: You can copy paste the name of your server (ex:  LAPTOP-99DHVJFT\SQLEXPRESS) from the Microsoft SQL Server Management Studio
+      
+                                                   
+NOTE: The previous step allowed you to create an Entities folder than contains your Book (table) and LibraryContext (database). Now we can proceed with injecting a dependency--------	--
+
+25. Go to your Program.cs folder
+26. Type this as header files:
+										using Microsoft.EntityFrameworkCore;
+										using SetupMVC.Entities;                            //SetupMVC is the name your project folder
+
+27. Type this below var builder = WebApplication.CreateBuilder(args); :
+										builder.Services.AddDbContext<LibraryContext>(option => 
+    option.UseSqlServer("Server=LAPTOP-99DHVJFT\\SQLEXPRESS;Database=Library;TrustServerCertificate=true;Trusted_Connection=True") //The string is from CTRL+Click the "LibraryContext"
+);
+
+NOTE: before you copy the SQL Server connection string, comment out the line that contains the word ‘WARNING’
+
+28. Type this in the terminal:
+										 dotnet build
+										
+NOTE: The previous step made you successufully inject a dependency. It should show 0 Warning(s) and 0 Error(s) in your terminal. The next step, we will now use the DBContext------------
+
+29. In your project folder's Controllers Folder, create a new controller.
+                             1. Right-click the Controllers folder
+                             2. Hover on ‘New C#’    
+                             3. Click ‘Controller’
+                             4. Name your controller (Example:              NewController)
+                             
+30. Here is a sample input for your NewController. Make sure to copy it and replace what's necessary:
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SetupMVC.Entities;  // YourProjectFolderName.Entities;
+
+namespace SetupMVC.Controllers
+{
+    public class NewController : Controller
+    {
+        private readonly LibraryContext _context ;
+
+
+        public NewController(LibraryContext context)
+        {
+            _context = context;
+            
+        }
+
+        public IActionResult Index() //this name matches the Index.cshtml file inside your Views folder's "New" Folder. IT IS A MUST MATCH
+        {
+            var model = _context.Books.ToList(); //hover on model
+            return View(model);
+        }
+
+    }
+}
+
+32. In your project folder's Views Folder, create a new folder named ‘New’ (to match the ‘NewController’ controller name)
+33. Inside your ‘New’ Folder, create the Index.cshtml file (to match with your ‘Index()’ function from the NewController)
+34. The Index.cshtml file's input should look like the following. You can copy it and modify what is necessary:
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+@model List<SetupVMC.Entities.Book>
+
+<h1>List of books</h1>
+
+ @* display simple *@
+@* <ol>
+    @foreach(var book in Model){
+        <li>
+            Book Id : @book.Id |
+            Name : @book.Name |
+            Author : @book.Author
+        </li>
+    }
+</ol> *@
+
+ <table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Author</th>
+    </thead>
+
+    <tbody>
+        @foreach(var book in Model){
+            <tr>
+                <td>@book.Id</td>
+                <td>@book.Name</td>
+                <td>@book.Author</td>
+            </tr>
+        }
+    </tbody>
+</table> 
+
+ 35. That should be done. Now run your program. 
+ 	1. Click on the Run and Debug Icon from the left side panel. 
+     2. Click the Run and Debug button; then your terminal might look crazy after this, but it will eventually display your Home page
+     3. To access your new controller's page, add this to the URL:
+     																					 /new
+     
+NOTE: The last step will allow you to see the data on the browser. Now let's proceed with making the CRUD-------------------------------------------------------------------
+
+36. Open your NewController.cs file from the Controllers folder.
+37. Below the Index() constructor, add these lines of code:
+
+ 		// CREATE
+        [HttpGet]
+        public IActionResult Create(){
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Book b){
+            _context.Books.Add(b);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // UPDATE
+        [HttpGet]
+        public IActionResult Update(int id){
+            var book = _context.Books.Where(q  => q.Id == id).FirstOrDefault();
+            return View(book);
+        }
+
+        [HttpPost]
+        public IActionResult Update(Book b){
+            _context.Books.Update(b);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+       }
+
+        // DELETE
+       [HttpGet]
+        public IActionResult Delete(int id){
+            var book = _context.Books.Where(q  => q.Id == id).FirstOrDefault();
+            _context.Books.Remove(book);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+38. In your New folder, create a .cshtml file named ‘Create’
+39. Inside your Create.cshtml file, type the following:
+
+<h1>
+    New Book
+</h1>
+
+<form action="Create" method="post">
+
+    <div>
+        <label for="">Name of book</label>
+        <input type="text" name="Name">
+    </div>
+
+     <div>
+        <label for="">Author of book</label>
+        <input type="text" name="Author">
+    </div>
+
+    <div>
+        <input type="submit" value="Submit" class="btn btn-success">
+    </div>
+</form>
+
+40. In your New folder, create another .cshtml file named ‘Update’
+41. Inside your Update.cshtml file, type the following:
+
+@model SetupMVC.Entities.Book   // 'SetupMVC' is the name of the project folder
+
+<h2>Update Book</h2>
+
+<form asp-action="Update" method="Post">
+    <input type="hidden" asp-for="Id">
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+     <div class="form-group">
+        <label asp-for="Author"></label>
+        <input asp-for="Author" class="form-control">
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
+
+42. Go to your Index.cshtml file
+43. Replace all the code below the <h1> element with the following:
+
+<a class="btn btn-success" href="new/create">Create new Book</a>
+
+ <table class="table">
+    <thead>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Author</th>
+        <th></th>
+    </thead>
+
+    <tbody>
+        @foreach(var book in Model){
+            <tr>
+                <td>@book.Id</td>
+                <td>@book.Name</td>
+                <td>@book.Author</td>
+                <td>
+                    <a class="btn btn-warning" href="new/update/@book.Id">Update</a>
+                    <a class="btn btn-danger" href="new/delete/@book.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> 
+																							
+44. Run the project again and see what happens. You now have CRUD with C# for Webdev
