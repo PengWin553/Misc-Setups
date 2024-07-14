@@ -1,0 +1,21 @@
+The error is: XAMPP Error: MySQL shutdown unexpectedly...
+
+1. Go to your xampp/mysql folder
+2. create a copy of the "data" folder (ex: name it, "data_old1")
+3. go to your original "data" folder
+
+We need to keep our databases, all we need to delete are the mysql databases.
+
+4. delete the following folders: 
+  * mysql
+  * performance schema
+  * phpmyadmin
+  * test
+
+5. delete all the files EXCEPT the "ibdata1"
+6. go to xamp/msql/backup folder
+7. copy everything inside it EXCEPT the "ibdata1"
+
+8. go back to the xamp/mysql/data folder
+9. paste what you just copied
+10. run mysql in your xampp control panel agan.
